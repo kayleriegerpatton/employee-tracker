@@ -1,4 +1,4 @@
-const departments = [education, exhibitions, curatorial];
+const departments = ["education", "exhibitions", "curatorial"];
 
 const roles = [
   {
@@ -42,27 +42,30 @@ const employees = [
   {
     firstName: "Mary",
     lastName: "Jordan",
-    roleId: 1,
+    roleId: 2,
+    managerId: 1,
   },
   {
     firstName: "Amanda",
     lastName: "Dotseth",
-    roleId: 1,
+    roleId: 3,
   },
   {
     firstName: "Shelley",
     lastName: "DeMaria",
     roleId: 1,
+    managerId: 3,
   },
   {
     firstName: "Julie",
     lastName: "Herrick",
-    roleId: 1,
+    roleId: 5,
   },
   {
     firstName: "Wendy",
     lastName: "Sepponen",
-    roleId: 1,
+    roleId: 6,
+    managerId: 5,
   },
 ];
 
