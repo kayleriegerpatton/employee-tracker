@@ -14,7 +14,6 @@ const dbOptions = {
 const db = mysql.createConnection(dbOptions);
 
 // seed data to database
-
 const insertDept = (dept) => {
   db.query(`INSERT INTO department (name) VALUE ('${dept}')`);
 };
