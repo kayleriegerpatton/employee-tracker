@@ -94,6 +94,7 @@ const questions = [
     ],
     when: (answers) => answers.employeeRole,
   },
+  //   "Update employee role" questions
   {
     type: "list",
     name: "employees",
