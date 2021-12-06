@@ -1,33 +1,33 @@
-const departments = ["education", "exhibitions", "curatorial"];
+const departments = ["Education", "Exhibitions", "Curatorial"];
 
 const roles = [
   {
-    title: "director of education",
+    title: "Director of Education",
     salary: 60000,
     departmentId: 1,
   },
   {
-    title: "education manager",
+    title: "Education Manager",
     salary: 45000,
     departmentId: 1,
   },
   {
-    title: "curator",
+    title: "Curator",
     salary: 75000,
     departmentId: 3,
   },
   {
-    title: "curatorial assistant",
+    title: "Curatorial Assistant",
     salary: 55000,
     departmentId: 3,
   },
   {
-    title: "exhibition designer",
+    title: "Exhibition Designer",
     salary: 70000,
     departmentId: 2,
   },
   {
-    title: "exhibition manager",
+    title: "Exhibition Manager",
     salary: 55000,
     departmentId: 2,
   },

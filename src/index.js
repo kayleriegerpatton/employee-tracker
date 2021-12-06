@@ -53,8 +53,9 @@ const start = async () => {
       inProgress = false;
       console.log("Goodbye.");
     }
+    // console.log(answers);
   }
-  //   console.log(answers);
+
   process.exit(0);
 };
 
