@@ -1,9 +1,11 @@
 const cTable = require("console.table");
 const inquirer = require("inquirer");
 const questions = require("./questions");
-// const { queries } = require("./utils/queries");
-
-// console.log(cTable.getTable('array/table name here'));
+const {
+  displayEmployees,
+  displayRoles,
+  displayDepts,
+} = require("./utils/queries");
 
 const start = async () => {
   let inProgress = true;
@@ -13,13 +15,18 @@ const start = async () => {
 
     // VIEW options
     if (answers.task === "viewEmployees") {
-      // SELECT * FROM employee
+      displayEmployees();
+      return;
     }
+
     if (answers.task === "viewRoles") {
-      // SELECT * FROM role
+      displayRoles();
+      return;
     }
+
     if (answers.task === "viewDepts") {
-      // SELECT * FROM department
+      displayDepts();
+      return;
     }
 
     // ADD options
@@ -52,11 +59,9 @@ const start = async () => {
     if (answers.task === "quit") {
       inProgress = false;
       console.log("Goodbye.");
+      process.exit(0);
     }
-    // console.log(answers);
   }
-
-  process.exit(0);
 };
 
 start();
