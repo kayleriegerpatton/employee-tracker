@@ -59,20 +59,57 @@ const displayDepts = () => {
   db.end();
 };
 
-// QUERY SYNTAX:
+// add dept
+const addDepartment = (answers) => {
+  const query = `INSERT INTO department (name) VALUES ('${answers.deptName}');`;
+  db.query(query, (err, result) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    console.log(`${answers.deptName} added to database.`);
+  });
+};
 
-// // add dept
-// INSERT INTO department (name) VALUES ('');
+// add role
+const addRole = (answers) => {
+  // get departments from db
+  // pass departments to choices constructor fn
+  // call choices constructor in question array? get answers
+  // construct mysql query from answers & execute
+  // INSERT INTO role (title, salary, department_id) VALUES ('', , );
+};
 
-// // add role
-// INSERT INTO role (title, salary, department_id) VALUES ('', , );
+// add employee
+const addEmployee = (answers) => {
+  // get roles from db
+  // get employees from db for manager selection
+  // pass roles to choices constructor fn
+  // pass employees to choices constructor fn
+  // call choices constructor fns in questions array? get answers
+  // construct mysql query with answers & execute
+  // INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('', '', #, #);
+};
 
-// // add employee
-// INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('', '', #, #);
+// update employee role
+const updateEmployeeRole = (answers) => {
+  // get employees from db (need id)
+  // get roles from db (need id)
+  // pass employee names and role names to choices constructor fns
+  // call constructor fns in questions array? & get answers
+  // pass employee.id and role.id into query variable
+  // execute query
+  // UPDATE employee
+  // SET role_id = #
+  // WHERE id = #;
+};
 
-// // update employee role
-// UPDATE employee
-// SET role_id = #
-// WHERE id = #;
-
-module.exports = { displayEmployees, displayRoles, displayDepts };
+module.exports = {
+  displayEmployees,
+  displayRoles,
+  displayDepts,
+  addDepartment,
+  addRole,
+  addEmployee,
+  updateEmployeeRole,
+};

@@ -5,6 +5,10 @@ const {
   displayEmployees,
   displayRoles,
   displayDepts,
+  addDepartment,
+  addRole,
+  addEmployee,
+  updateEmployeeRole,
 } = require("./utils/queries");
 
 const start = async () => {
@@ -31,12 +35,12 @@ const start = async () => {
 
     // ADD options
     if (answers.task === "addRole") {
-      // INSERT INTO role table
+      //   addRole(answers);
       console.log(`${answers.roleName} added to the database.`);
     }
 
     if (answers.task === "addEmployee") {
-      // INSERT INTO employee table
+      //  addEmployee(answers);
       console.log(
         `${answers.firstName} ${answers.lastName} added to the database.`
       );
@@ -44,15 +48,15 @@ const start = async () => {
 
     // UPDATE options
     if (answers.task === "updateEmployeeRole") {
-      // INSERT INTO employee table
+      // updateEmployeeRole(answers);
       console.log(
         `Updated ${answers.employees}'s role to ${answers.employeeNewRole}.`
       );
     }
 
     if (answers.task === "addDept") {
-      // INSERT INTO department table
-      console.log(`${answers.deptName} added to the database.`);
+      addDepartment(answers);
+      // console.log(`${answers.deptName} added to the database.`);
     }
 
     // QUIT
