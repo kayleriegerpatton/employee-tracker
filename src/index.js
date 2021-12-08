@@ -4,9 +4,10 @@ const mysql = require("mysql2");
 const cTable = require("console.table");
 const colors = require("colors");
 colors.setTheme({
-  custom: ["bgCyan", "black"],
   success: ["bgGreen", "black"],
-  removed: ["bgRed", "white"],
+  warning: ["bgBrightYellow", "black"],
+  fail: ["bgRed", "white", "bold"],
+  message: ["bgBrightCyan", "black"],
 });
 
 const {
@@ -17,12 +18,6 @@ const {
   employeeRoleQuestions,
 } = require("./questions");
 const {
-  displayRoles,
-  displayDepts,
-  addDepartment,
-  addRole,
-  addEmployee,
-  updateEmployeeRole,
   allEmployeesQuery,
   allRolesQuery,
   allDepartmentsQuery,
@@ -61,42 +56,61 @@ const start = async () => {
     }
 
     if (task === "addRole") {
+      // check if departments exist in db
       const allDepts = await dbQuery(allDepartmentsQuery);
+
       if (allDepts.length) {
+        // get new role answers
         const { roleName, roleDept, salary } = await inquirer.prompt(
           roleQuestions
         );
-
+        // add new role to db
         await dbQuery(
           `INSERT INTO role (title, salary, department_id) VALUE ('${roleName}', ${salary}, ${roleDept});`
         );
 
-        console.log(`${roleName} added to the database.`.success);
+        console.log(`\n ${roleName} added to the database. \n`.success);
       } else {
-        console.log("Please create a department first.");
+        console.log("\n Please create a department first. \n".warning);
       }
     }
 
     if (task === "addEmployee") {
-      const answers = await inquirer.prompt(employeeQuestions);
-      console.log(
-        `${answers.firstName} ${answers.lastName} added to the database.`
-          .success
-      );
+      // check if roles exist in db for role selection question
+      const allRoles = await dbQuery("SELECT * FROM role;");
+
+      if (allRoles.length) {
+        // get new employee answers
+        const { firstName, lastName, employeeRole, employeeManager } =
+          await inquirer.prompt(employeeQuestions);
+
+        // add new employee to db
+        await dbQuery(
+          `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', ${employeeRole}, ${employeeManager});`
+        );
+
+        console.log(
+          `\n ${firstName} ${lastName} added to the database. \n`.success
+        );
+      } else {
+        console.log("\n Please create a new role first. \n".warning);
+      }
     }
 
     // UPDATE options
     if (task === "updateEmployeeRole") {
-      const answers = await inquirer.prompt(employeeRoleQuestions);
+      const { employees, employeeNewRole } = await inquirer.prompt(
+        employeeRoleQuestions
+      );
       console.log(
-        `Updated ${answers.employees}'s role to ${answers.employeeNewRole}.`
+        `\n Updated ${employees}'s role to ${employeeNewRole}. \n`.success
       );
     }
 
     // QUIT
     if (task === "quit") {
       inProgress = false;
-      console.log("Application ended.");
+      console.log("\n Application ended. \n".message);
       process.exit(0);
     }
   }

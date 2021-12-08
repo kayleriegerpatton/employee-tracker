@@ -1,4 +1,8 @@
-const { generateDeptChoices } = require("./utils/choices");
+const {
+  generateDeptChoices,
+  generateRoleChoices,
+  generateEmployeesChoices,
+} = require("./utils/choices");
 const { validateInput } = require("./utils/utils");
 
 const startQuestion = [
@@ -74,25 +78,20 @@ const employeeQuestions = [
     type: "list",
     name: "employeeRole",
     message: "What is the employee's role?",
-    choices: [
-      // fn to dynamically get choices list from db
-      // MOCK CHOICES
-      { name: "role1", value: "role1" },
-      { name: "role2", value: "role2" },
-      { name: "role3", value: "role3" },
-    ],
+    choices: generateRoleChoices,
+  },
+  {
+    type: "confirm",
+    name: "managerConfirm",
+    message: "Does the employee have a manager?",
+    default: false,
   },
   {
     type: "list",
     name: "employeeManager",
     message: "Who is the employee's manager?",
-    choices: [
-      // fn to dynamically get choices list from db
-      // MOCK CHOICES
-      { name: "None", value: "none" },
-      { name: "employee2", value: "employee2" },
-      { name: "employee3", value: "employee3" },
-    ],
+    choices: generateEmployeesChoices,
+    when: (answers) => answers.managerConfirm,
   },
 ];
 
