@@ -1,75 +1,18 @@
-const mysql = require("mysql2");
-const cTable = require("console.table");
-
-// database config
-const dbOptions = {
-  host: "localhost",
-  user: "root",
-  password: "Password123!!",
-  database: "company_db",
-};
-
-// connect to database
-const db = mysql.createConnection(dbOptions);
-
-// view all employees
-const displayEmployees = () => {
-  const query = `SELECT employee.first_name, employee.last_name, title, salary, name AS department
-  FROM employee
-  LEFT JOIN role
-  ON employee.role_id =role.id
-  LEFT JOIN department
-  ON role.department_id=department.id;`;
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.table("Employees", result);
-  });
-  //   db.end();
-};
+const allEmployeesQuery = `SELECT employee.first_name AS "First Name", employee.last_name AS "Last Name", title AS Title, salary as "Salary", name AS Department
+FROM employee
+LEFT JOIN role
+ON employee.role_id =role.id
+LEFT JOIN department
+ON role.department_id=department.id;`;
 
 // view all roles
-const displayRoles = () => {
-  const query = `SELECT role.id, role.title, role.salary, department.name AS department FROM role
+const allRolesQuery = `SELECT role.title AS Roles, role.salary AS Salary, department.name AS Department FROM role
   JOIN department ON role.department_id = department.id
   ORDER BY department.name;`;
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.table("Roles", result);
-  });
-  db.end();
-};
 
 // view all depts
-const displayDepts = () => {
-  const query = `SELECT * FROM department
+const allDepartmentsQuery = `SELECT department.name AS Departments FROM department
   ORDER BY name;`;
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.table("Departments", result);
-  });
-  db.end();
-};
-
-// add dept
-const addDepartment = (answers) => {
-  const query = `INSERT INTO department (name) VALUES ('${answers.deptName}');`;
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    console.log(`${answers.deptName} added to database.`);
-  });
-};
 
 // add role
 const addRole = (answers) => {
@@ -105,11 +48,13 @@ const updateEmployeeRole = (answers) => {
 };
 
 module.exports = {
-  displayEmployees,
-  displayRoles,
-  displayDepts,
-  addDepartment,
-  addRole,
-  addEmployee,
-  updateEmployeeRole,
+  //   displayRoles,
+  //   displayDepts,
+  //   addDepartment,
+  //   addRole,
+  //   addEmployee,
+  //   updateEmployeeRole,
+  allEmployeesQuery,
+  allRolesQuery,
+  allDepartmentsQuery,
 };

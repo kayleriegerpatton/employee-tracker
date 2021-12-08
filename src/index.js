@@ -1,45 +1,69 @@
-const cTable = require("console.table");
+// const cTable = require("console.table");
 const inquirer = require("inquirer");
-const questions = require("./questions");
+const mysql = require("mysql2");
+const cTable = require("console.table");
+const colors = require("colors");
+colors.setTheme({
+  custom: ["bgCyan", "black"],
+  success: ["bgGreen", "black"],
+  removed: ["bgRed", "white"],
+});
+
 const {
-  displayEmployees,
+  startQuestion,
+  deptQuestion,
+  roleQuestions,
+  employeeQuestions,
+  employeeRoleQuestions,
+} = require("./questions");
+const {
   displayRoles,
   displayDepts,
   addDepartment,
   addRole,
   addEmployee,
   updateEmployeeRole,
+  allEmployeesQuery,
+  allRolesQuery,
+  allDepartmentsQuery,
 } = require("./utils/queries");
+const { dbQuery } = require("./utils/utils");
 
 const start = async () => {
   let inProgress = true;
 
   while (inProgress) {
-    const answers = await inquirer.prompt(questions);
+    const { task } = await inquirer.prompt(startQuestion);
 
     // VIEW options
-    if (answers.task === "viewEmployees") {
-      displayEmployees();
-      return;
+    if (task === "viewEmployees") {
+      const allEmployeesData = dbQuery(allEmployeesQuery, "view");
+      console.log(allEmployeesData);
     }
 
-    if (answers.task === "viewRoles") {
-      displayRoles();
-      return;
+    if (task === "viewRoles") {
+      dbQuery(allRolesQuery, "view");
     }
 
-    if (answers.task === "viewDepts") {
-      displayDepts();
-      return;
+    if (task === "viewDepts") {
+      dbQuery(allDepartmentsQuery, "view");
     }
 
     // ADD options
-    if (answers.task === "addRole") {
-      //   addRole(answers);
-      console.log(`${answers.roleName} added to the database.`);
+    if (task === "addDept") {
+      const { deptName } = await inquirer.prompt(deptQuestion);
+
+      dbQuery(`INSERT INTO department (name) VALUES ('${deptName}');`);
+
+      console.log(`\n ${deptName} added to the database. \n`.success);
     }
 
-    if (answers.task === "addEmployee") {
+    if (task === "addRole") {
+      //   addRole(answers);
+      // console.log(`${answers.roleName} added to the database.`);
+    }
+
+    if (task === "addEmployee") {
       //  addEmployee(answers);
       console.log(
         `${answers.firstName} ${answers.lastName} added to the database.`
@@ -47,22 +71,17 @@ const start = async () => {
     }
 
     // UPDATE options
-    if (answers.task === "updateEmployeeRole") {
+    if (task === "updateEmployeeRole") {
       // updateEmployeeRole(answers);
       console.log(
         `Updated ${answers.employees}'s role to ${answers.employeeNewRole}.`
       );
     }
 
-    if (answers.task === "addDept") {
-      addDepartment(answers);
-      // console.log(`${answers.deptName} added to the database.`);
-    }
-
     // QUIT
-    if (answers.task === "quit") {
+    if (task === "quit") {
       inProgress = false;
-      console.log("Goodbye.");
+      console.log("Application ended.");
       process.exit(0);
     }
   }

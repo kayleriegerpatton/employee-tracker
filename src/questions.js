@@ -1,6 +1,7 @@
+const { generateDeptChoices } = require("./utils/choices");
 const { validateInput } = require("./utils/utils");
 
-const questions = [
+const startQuestion = [
   {
     type: "list",
     name: "task",
@@ -16,56 +17,60 @@ const questions = [
       { name: "Quit", value: "quit" },
     ],
   },
+];
+
+const deptQuestion = [
   {
     type: "input",
     name: "deptName",
     message: "What is the name of the department?",
-    when: (answers) => answers.task === "addDept",
     validate: validateInput,
   },
-  //   "Add role" questions
+];
+
+//   "Add role" questions
+const roleQuestions = [
   {
     type: "input",
     name: "roleName",
     message: "What is the name of the role?",
-    when: (answers) => answers.task === "addRole",
     validate: validateInput,
   },
   {
     type: "input",
     name: "salary",
     message: "What is the role's salary?",
-    when: (answers) => answers.roleName,
     validate: (salary) => {
-      return /^\d+$/.test(salary) || "Please enter only numbers.";
+      return (
+        /^(0|[1-9]\d*)(\.\d+)?$/.test(salary) ||
+        "Please enter a number without commas."
+      );
     },
   },
   {
     type: "list",
     name: "roleDept",
     message: "To which department does the role belong?",
+    // choices: generateDeptChoices(),
     choices: [
-      // fn to dynamically get choices list from db
-      // MOCK CHOICES
       { name: "dept1", value: "dept1" },
       { name: "dept2", value: "dept2" },
-      { name: "dept3", value: "dept3" },
     ],
-    when: (answers) => answers.salary,
   },
-  //   "Add employee" questions
+];
+
+//   "Add employee" questions
+const employeeQuestions = [
   {
     type: "input",
     name: "firstName",
     message: "What is the employee's first name?",
-    when: (answers) => answers.task === "addEmployee",
     validate: validateInput,
   },
   {
     type: "input",
     name: "lastName",
     message: "What is the employee's last name?",
-    when: (answers) => answers.firstName,
     validate: validateInput,
   },
   {
@@ -79,7 +84,6 @@ const questions = [
       { name: "role2", value: "role2" },
       { name: "role3", value: "role3" },
     ],
-    when: (answers) => answers.lastName,
   },
   {
     type: "list",
@@ -92,9 +96,11 @@ const questions = [
       { name: "employee2", value: "employee2" },
       { name: "employee3", value: "employee3" },
     ],
-    when: (answers) => answers.employeeRole,
   },
-  //   "Update employee role" questions
+];
+
+//   "Update employee role" questions
+const employeeRoleQuestions = [
   {
     type: "list",
     name: "employees",
@@ -106,7 +112,6 @@ const questions = [
       { name: "employee2", value: "employee2" },
       { name: "employee3", value: "employee3" },
     ],
-    when: (answers) => answers.task === "updateEmployeeRole",
   },
   {
     type: "list",
@@ -119,8 +124,13 @@ const questions = [
       { name: "role2", value: "role2" },
       { name: "role3", value: "role3" },
     ],
-    when: (answers) => answers.employees,
   },
 ];
 
-module.exports = questions;
+module.exports = {
+  startQuestion,
+  deptQuestion,
+  roleQuestions,
+  employeeQuestions,
+  employeeRoleQuestions,
+};
