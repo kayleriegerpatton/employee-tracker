@@ -37,42 +37,57 @@ const start = async () => {
 
     // VIEW options
     if (task === "viewEmployees") {
-      const allEmployeesData = dbQuery(allEmployeesQuery, "view");
-      console.log(allEmployeesData);
+      const allEmployeesData = await dbQuery(allEmployeesQuery);
+      console.table(allEmployeesData);
     }
 
     if (task === "viewRoles") {
-      dbQuery(allRolesQuery, "view");
+      const roles = await dbQuery(allRolesQuery);
+      console.table(roles);
     }
 
     if (task === "viewDepts") {
-      dbQuery(allDepartmentsQuery, "view");
+      const allDepartments = await dbQuery(allDepartmentsQuery);
+      console.table(allDepartments);
     }
 
     // ADD options
     if (task === "addDept") {
       const { deptName } = await inquirer.prompt(deptQuestion);
 
-      dbQuery(`INSERT INTO department (name) VALUES ('${deptName}');`);
+      await dbQuery(`INSERT INTO department (name) VALUES ('${deptName}');`);
 
       console.log(`\n ${deptName} added to the database. \n`.success);
     }
 
     if (task === "addRole") {
-      //   addRole(answers);
-      // console.log(`${answers.roleName} added to the database.`);
+      const allDepts = await dbQuery(allDepartmentsQuery);
+      if (allDepts.length) {
+        const { roleName, roleDept, salary } = await inquirer.prompt(
+          roleQuestions
+        );
+
+        await dbQuery(
+          `INSERT INTO role (title, salary, department_id) VALUE ('${roleName}', ${salary}, ${roleDept});`
+        );
+
+        console.log(`${roleName} added to the database.`.success);
+      } else {
+        console.log("Please create a department first.");
+      }
     }
 
     if (task === "addEmployee") {
-      //  addEmployee(answers);
+      const answers = await inquirer.prompt(employeeQuestions);
       console.log(
         `${answers.firstName} ${answers.lastName} added to the database.`
+          .success
       );
     }
 
     // UPDATE options
     if (task === "updateEmployeeRole") {
-      // updateEmployeeRole(answers);
+      const answers = await inquirer.prompt(employeeRoleQuestions);
       console.log(
         `Updated ${answers.employees}'s role to ${answers.employeeNewRole}.`
       );

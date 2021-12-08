@@ -14,15 +14,6 @@ const allRolesQuery = `SELECT role.title AS Roles, role.salary AS Salary, depart
 const allDepartmentsQuery = `SELECT department.name AS Departments FROM department
   ORDER BY name;`;
 
-// add role
-const addRole = (answers) => {
-  // get departments from db
-  // pass departments to choices constructor fn
-  // call choices constructor in question array? get answers
-  // construct mysql query from answers & execute
-  // INSERT INTO role (title, salary, department_id) VALUES ('', , );
-};
-
 // add employee
 const addEmployee = (answers) => {
   // get roles from db

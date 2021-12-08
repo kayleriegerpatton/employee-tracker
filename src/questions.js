@@ -19,6 +19,7 @@ const startQuestion = [
   },
 ];
 
+// "Add dept" questions
 const deptQuestion = [
   {
     type: "input",
@@ -51,11 +52,7 @@ const roleQuestions = [
     type: "list",
     name: "roleDept",
     message: "To which department does the role belong?",
-    // choices: generateDeptChoices(),
-    choices: [
-      { name: "dept1", value: "dept1" },
-      { name: "dept2", value: "dept2" },
-    ],
+    choices: generateDeptChoices,
   },
 ];
 

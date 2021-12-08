@@ -19,17 +19,16 @@ const validateInput = (input) => {
   return true;
 };
 
-const dbQuery = (query, action) => {
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    if (action === "view") {
-      console.table(result);
-      return;
-    }
-    return;
+const dbQuery = (query) => {
+  return new Promise((resolve, reject) => {
+    db.query(query, (err, result) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+
+      return resolve(result);
+    });
   });
 };
 

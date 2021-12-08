@@ -1,24 +1,18 @@
 const mysql = require("mysql2");
+const {} = require("./queries");
 
-const { transformDepartments } = require("./transformers");
-const { db, dbOptions } = require("./queries.js");
+const { dbQuery } = require("./utils");
 
-const generateDeptChoices = () => {
+const generateDeptChoices = async () => {
   // get departments from DB
-  const query = `SELECT department.name AS Departments FROM department ORDER BY name;`;
+  const allDepts = await dbQuery("SELECT * FROM department;");
 
-  db.query(query, (err, result) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-    return result;
+  return allDepts.map((dept) => {
+    return {
+      name: dept.name,
+      value: dept.id,
+    };
   });
-  //   db.end();
-
-  const deptChoices = transformDepartments(result);
-
-  return deptChoices;
 };
 
 module.exports = { generateDeptChoices };
