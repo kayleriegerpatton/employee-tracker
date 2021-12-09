@@ -1,4 +1,3 @@
-// const cTable = require("console.table");
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const cTable = require("console.table");
@@ -22,9 +21,20 @@ const {
   allRolesQuery,
   allDepartmentsQuery,
 } = require("./utils/queries");
-const { dbQuery } = require("./utils/utils");
+const Db = require("../Db");
 
 const start = async () => {
+  // create new database instance
+  const db = new Db({
+    host: process.envDB_HOST || "localhost",
+    user: process.envDB_USER || "root",
+    password: process.envDB_PASSWORD || "Password123!!",
+    database: process.envDB_NAME || "company_db",
+  });
+
+  // start database
+  await db.start();
+
   let inProgress = true;
 
   while (inProgress) {
@@ -33,7 +43,7 @@ const start = async () => {
     // VIEW options
     if (task === "viewEmployees") {
       // check if any employees exist in db
-      const allEmployees = await dbQuery(allEmployeesQuery);
+      const allEmployees = await db.query(allEmployeesQuery);
 
       if (allEmployees) {
         console.table(allEmployees);
@@ -46,7 +56,7 @@ const start = async () => {
 
     if (task === "viewRoles") {
       // check if any roles exist in db
-      const allRoles = await dbQuery(allRolesQuery);
+      const allRoles = await db.query(allRolesQuery);
 
       if (allRoles.length) {
         console.table(allRoles);
@@ -59,7 +69,7 @@ const start = async () => {
 
     if (task === "viewDepts") {
       // check if departments exist in db
-      const allDepts = await dbQuery(allDepartmentsQuery);
+      const allDepts = await db.query(allDepartmentsQuery);
 
       // get depts from db and log table
       if (allDepts.length) {
@@ -75,7 +85,7 @@ const start = async () => {
     if (task === "addDept") {
       const { deptName } = await inquirer.prompt(deptQuestion);
 
-      await dbQuery(`INSERT INTO department (name) VALUES ('${deptName}');`);
+      await db.query(`INSERT INTO department (name) VALUES ('${deptName}');`);
 
       console.log(
         `\n ${deptName} department added to the database. \n`.success
@@ -84,7 +94,7 @@ const start = async () => {
 
     if (task === "addRole") {
       // check if departments exist in db
-      const allDepts = await dbQuery(allDepartmentsQuery);
+      const allDepts = await db.query(allDepartmentsQuery);
 
       if (allDepts.length) {
         // get new role answers
@@ -92,7 +102,7 @@ const start = async () => {
           roleQuestions
         );
         // add new role to db
-        await dbQuery(
+        await db.query(
           `INSERT INTO role (title, salary, department_id) VALUE ('${roleName}', ${salary}, ${roleDept});`
         );
 
@@ -104,7 +114,7 @@ const start = async () => {
 
     if (task === "addEmployee") {
       // check if roles exist in db for role selection question
-      const allRoles = await dbQuery("SELECT * FROM role;");
+      const allRoles = await db.query("SELECT * FROM role;");
 
       if (allRoles.length) {
         // get new employee answers
@@ -114,12 +124,12 @@ const start = async () => {
         // check if employee manager is indicated
         if (employeeManager) {
           // add new employee with manager to db
-          await dbQuery(
+          await db.query(
             `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', ${employeeRole}, ${employeeManager});`
           );
         } else {
           // add new employee without manager to db
-          await dbQuery(
+          await db.query(
             `INSERT INTO employee (first_name, last_name, role_id) VALUES ('${firstName}', '${lastName}', ${employeeRole});`
           );
         }
@@ -135,7 +145,7 @@ const start = async () => {
     // UPDATE options
     if (task === "updateEmployeeRole") {
       // check if employees exist in db
-      const allEmployees = await dbQuery("SELECT * FROM employee;");
+      const allEmployees = await db.query("SELECT * FROM employee;");
 
       if (allEmployees.length) {
         const { employee, employeeNewRole } = await inquirer.prompt(
@@ -143,7 +153,7 @@ const start = async () => {
         );
 
         // udpate employee role in db
-        await dbQuery(
+        await db.query(
           `UPDATE employee SET role_id = ${employeeNewRole} WHERE id = ${employee};`
         );
 
@@ -157,6 +167,7 @@ const start = async () => {
     if (task === "quit") {
       inProgress = false;
       console.log("\n Application ended. \n".message);
+      await db.stop();
       process.exit(0);
     }
   }

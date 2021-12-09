@@ -1,11 +1,8 @@
-const mysql = require("mysql2");
-const {} = require("./queries");
-
-const { dbQuery } = require("./utils");
+const Db = require("../Db");
 
 const generateDeptChoices = async () => {
   // get departments from DB
-  const allDepts = await dbQuery("SELECT * FROM department;");
+  const allDepts = await db.query("SELECT * FROM department;");
 
   return allDepts.map((dept) => {
     return {
@@ -17,7 +14,7 @@ const generateDeptChoices = async () => {
 
 const generateRoleChoices = async () => {
   // get all roles from db
-  const allRoles = await dbQuery("SELECT * FROM role;");
+  const allRoles = await db.query("SELECT * FROM role;");
 
   return allRoles.map((role) => {
     return {
@@ -29,7 +26,7 @@ const generateRoleChoices = async () => {
 
 const generateEmployeesChoices = async () => {
   // get all employees from db
-  const allEmployees = await dbQuery("SELECT * FROM employee;");
+  const allEmployees = await db.query("SELECT * FROM employee;");
 
   return allEmployees.map((employee) => {
     return {
