@@ -32,18 +32,43 @@ const start = async () => {
 
     // VIEW options
     if (task === "viewEmployees") {
-      const allEmployeesData = await dbQuery(allEmployeesQuery);
-      console.table(allEmployeesData);
+      // check if any employees exist in db
+      const allEmployees = await dbQuery(allEmployeesQuery);
+
+      if (allEmployees) {
+        console.table(allEmployees);
+      } else {
+        console.log(
+          "\n There are curently no employees in the database. \n".warning
+        );
+      }
     }
 
     if (task === "viewRoles") {
-      const roles = await dbQuery(allRolesQuery);
-      console.table(roles);
+      // check if any roles exist in db
+      const allRoles = await dbQuery(allRolesQuery);
+
+      if (allRoles.length) {
+        console.table(allRoles);
+      } else {
+        console.log(
+          "\n There are currently no roles in the database. \n".warning
+        );
+      }
     }
 
     if (task === "viewDepts") {
-      const allDepartments = await dbQuery(allDepartmentsQuery);
-      console.table(allDepartments);
+      // check if departments exist in db
+      const allDepts = await dbQuery(allDepartmentsQuery);
+
+      // get depts from db and log table
+      if (allDepts.length) {
+        console.table(allDepts);
+      } else {
+        console.log(
+          "\n There are currently no departments in the database. \n".warning
+        );
+      }
     }
 
     // ADD options
@@ -52,7 +77,9 @@ const start = async () => {
 
       await dbQuery(`INSERT INTO department (name) VALUES ('${deptName}');`);
 
-      console.log(`\n ${deptName} added to the database. \n`.success);
+      console.log(
+        `\n ${deptName} department added to the database. \n`.success
+      );
     }
 
     if (task === "addRole") {
@@ -84,10 +111,18 @@ const start = async () => {
         const { firstName, lastName, employeeRole, employeeManager } =
           await inquirer.prompt(employeeQuestions);
 
-        // add new employee to db
-        await dbQuery(
-          `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', ${employeeRole}, ${employeeManager});`
-        );
+        // check if employee manager is indicated
+        if (employeeManager) {
+          // add new employee with manager to db
+          await dbQuery(
+            `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ('${firstName}', '${lastName}', ${employeeRole}, ${employeeManager});`
+          );
+        } else {
+          // add new employee without manager to db
+          await dbQuery(
+            `INSERT INTO employee (first_name, last_name, role_id) VALUES ('${firstName}', '${lastName}', ${employeeRole});`
+          );
+        }
 
         console.log(
           `\n ${firstName} ${lastName} added to the database. \n`.success
@@ -99,12 +134,23 @@ const start = async () => {
 
     // UPDATE options
     if (task === "updateEmployeeRole") {
-      const { employees, employeeNewRole } = await inquirer.prompt(
-        employeeRoleQuestions
-      );
-      console.log(
-        `\n Updated ${employees}'s role to ${employeeNewRole}. \n`.success
-      );
+      // check if employees exist in db
+      const allEmployees = await dbQuery("SELECT * FROM employee;");
+
+      if (allEmployees.length) {
+        const { employee, employeeNewRole } = await inquirer.prompt(
+          employeeRoleQuestions
+        );
+
+        // udpate employee role in db
+        await dbQuery(
+          `UPDATE employee SET role_id = ${employeeNewRole} WHERE id = ${employee};`
+        );
+
+        console.log(`\n Role updated. \n`.success);
+      } else {
+        console.log("\n No employees to update. \n".warning);
+      }
     }
 
     // QUIT

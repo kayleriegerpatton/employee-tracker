@@ -99,27 +99,15 @@ const employeeQuestions = [
 const employeeRoleQuestions = [
   {
     type: "list",
-    name: "employees",
+    name: "employee",
     message: "Which employee's role do you want to update?",
-    choices: [
-      // fn to dynamically get choices list from db
-      // MOCK CHOICES
-      { name: "employee1", value: "employee1" },
-      { name: "employee2", value: "employee2" },
-      { name: "employee3", value: "employee3" },
-    ],
+    choices: generateEmployeesChoices,
   },
   {
     type: "list",
     name: "employeeNewRole",
     message: "What is the employee's new role?",
-    choices: [
-      // fn to dynamically get choices list from db
-      // MOCK CHOICES
-      { name: "role1", value: "role1" },
-      { name: "role2", value: "role2" },
-      { name: "role3", value: "role3" },
-    ],
+    choices: generateRoleChoices,
   },
 ];
 

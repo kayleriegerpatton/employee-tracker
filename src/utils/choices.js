@@ -19,8 +19,6 @@ const generateRoleChoices = async () => {
   // get all roles from db
   const allRoles = await dbQuery("SELECT * FROM role;");
 
-  console.log(allRoles);
-
   return allRoles.map((role) => {
     return {
       name: role.title,
