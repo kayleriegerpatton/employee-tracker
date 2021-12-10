@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const colors = require("colors");
-const art = require("ascii-art");
+const cTable = require("console.table");
+// const art = require("ascii-art");
 
 const Db = require("./lib/Db");
 const { validateInput } = require("./utils/utils");
@@ -8,6 +9,7 @@ const {
   startQuestion,
   deptQuestion,
   getRoleQuestions,
+  getEmployeeQuestions,
 } = require("./questions");
 const {
   allEmployeesQuery,
@@ -21,6 +23,7 @@ const {
 } = require("./utils/choices");
 
 colors.setTheme({
+  greeting: ["rainbow"],
   success: ["bgGreen", "black"],
   warning: ["bgBrightYellow", "black"],
   fail: ["bgRed", "white", "bold"],
@@ -28,17 +31,17 @@ colors.setTheme({
 });
 
 const start = async () => {
-  const greetingMessage = await art
-    .font("Employee Tracker", "doom")
-    .completed();
+  // const greetingMessage = await art
+  //   .font("Employee Tracker", "doom")
+  //   .completed();
 
-  console.log(greetingMessage);
+  // console.log(greetingMessage);
 
   // create new database instance
   const db = new Db({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "password",
+    password: process.env.DB_PASSWORD || "Password123!!",
     database: process.env.DB_NAME || "company_db",
   });
 
@@ -131,39 +134,7 @@ const start = async () => {
 
       if (allRoles.length) {
         //   "Add employee" questions
-        const employeeQuestions = [
-          {
-            type: "input",
-            name: "firstName",
-            message: "What is the employee's first name?",
-            validate: validateInput,
-          },
-          {
-            type: "input",
-            name: "lastName",
-            message: "What is the employee's last name?",
-            validate: validateInput,
-          },
-          {
-            type: "list",
-            name: "employeeRole",
-            message: "What is the employee's role?",
-            choices: await generateRoleChoices(db),
-          },
-          {
-            type: "confirm",
-            name: "managerConfirm",
-            message: "Does the employee have a manager?",
-            default: false,
-          },
-          {
-            type: "list",
-            name: "employeeManager",
-            message: "Who is the employee's manager?",
-            choices: await generateEmployeesChoices(db),
-            when: (answers) => answers.managerConfirm,
-          },
-        ];
+        const employeeQuestions = await getEmployeeQuestions(db);
 
         // get new employee answers
         const { firstName, lastName, employeeRole, employeeManager } =

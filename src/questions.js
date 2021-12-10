@@ -4,7 +4,11 @@
 //   generateRoleChoices,
 //   generateEmployeesChoices,
 // } = require("./utils/choices");
-const { generateDeptChoices } = require("./utils/choices");
+const {
+  generateDeptChoices,
+  generateRoleChoices,
+  generateEmployeesChoices,
+} = require("./utils/choices");
 const { validateInput } = require("./utils/utils");
 
 const startQuestion = [
@@ -141,11 +145,45 @@ const getRoleQuestions = async (db) => {
   ];
 };
 
+const getEmployeeQuestions = async (db) => {
+  return [
+    {
+      type: "input",
+      name: "firstName",
+      message: "What is the employee's first name?",
+      validate: validateInput,
+    },
+    {
+      type: "input",
+      name: "lastName",
+      message: "What is the employee's last name?",
+      validate: validateInput,
+    },
+    {
+      type: "list",
+      name: "employeeRole",
+      message: "What is the employee's role?",
+      choices: await generateRoleChoices(db),
+    },
+    {
+      type: "confirm",
+      name: "managerConfirm",
+      message: "Does the employee have a manager?",
+      default: false,
+    },
+    {
+      type: "list",
+      name: "employeeManager",
+      message: "Who is the employee's manager?",
+      choices: await generateEmployeesChoices(db),
+      when: (answers) => answers.managerConfirm,
+    },
+  ];
+};
+
 module.exports = {
   startQuestion,
   deptQuestion,
   getRoleQuestions,
-  // roleQuestions,
-  // employeeQuestions,
-  // employeeRoleQuestions,
+  getEmployeeQuestions,
 };
