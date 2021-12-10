@@ -1,7 +1,24 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql2");
-const cTable = require("console.table");
 const colors = require("colors");
+
+const Db = require("./lib/Db");
+const { validateInput } = require("./utils/utils");
+const {
+  startQuestion,
+  deptQuestion,
+  getRoleQuestions,
+} = require("./questions");
+const {
+  allEmployeesQuery,
+  allRolesQuery,
+  allDepartmentsQuery,
+} = require("./utils/queries");
+const {
+  generateDeptChoices,
+  generateRoleChoices,
+  generateEmployeesChoices,
+} = require("./utils/choices");
+
 colors.setTheme({
   success: ["bgGreen", "black"],
   warning: ["bgBrightYellow", "black"],
@@ -9,33 +26,13 @@ colors.setTheme({
   message: ["bgBrightCyan", "black"],
 });
 
-const {
-  startQuestion,
-  deptQuestion,
-  roleQuestions,
-  employeeQuestions,
-  employeeRoleQuestions,
-} = require("./questions");
-const {
-  allEmployeesQuery,
-  allRolesQuery,
-  allDepartmentsQuery,
-} = require("./utils/queries");
-const { Db } = require("../src/db/Db");
-const {
-  generateDeptChoices,
-  generateRoleChoices,
-  generateEmployeesChoices,
-} = require("./utils/choices");
-const { validateInput } = require("./utils/utils");
-
 const start = async () => {
   // create new database instance
   const db = new Db({
-    host: process.envDB_HOST || "localhost",
-    user: process.envDB_USER || "root",
-    password: process.envDB_PASSWORD || "Password123!!",
-    database: process.envDB_NAME || "company_db",
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "Password123!!",
+    database: process.env.DB_NAME || "company_db",
   });
 
   // start database
@@ -104,31 +101,7 @@ const start = async () => {
 
       if (allDepts.length) {
         //   "Add role" questions
-        const roleQuestions = [
-          {
-            type: "input",
-            name: "roleName",
-            message: "What is the name of the role?",
-            validate: validateInput,
-          },
-          {
-            type: "input",
-            name: "salary",
-            message: "What is the role's salary?",
-            validate: (salary) => {
-              return (
-                /^(0|[1-9]\d*)(\.\d+)?$/.test(salary) ||
-                "Please enter a number without commas."
-              );
-            },
-          },
-          {
-            type: "list",
-            name: "roleDept",
-            message: "To which department does the role belong?",
-            choices: generateDeptChoices(db),
-          },
-        ];
+        const roleQuestions = await getRoleQuestions(db);
 
         // get new role answers
         const { roleName, roleDept, salary } = await inquirer.prompt(
@@ -168,7 +141,7 @@ const start = async () => {
             type: "list",
             name: "employeeRole",
             message: "What is the employee's role?",
-            choices: generateRoleChoices(db),
+            choices: await generateRoleChoices(db),
           },
           {
             type: "confirm",
@@ -180,7 +153,7 @@ const start = async () => {
             type: "list",
             name: "employeeManager",
             message: "Who is the employee's manager?",
-            choices: generateEmployeesChoices(db),
+            choices: await generateEmployeesChoices(db),
             when: (answers) => answers.managerConfirm,
           },
         ];
@@ -222,13 +195,13 @@ const start = async () => {
             type: "list",
             name: "employee",
             message: "Which employee's role do you want to update?",
-            choices: generateEmployeesChoices(db),
+            choices: await generateEmployeesChoices(db),
           },
           {
             type: "list",
             name: "employeeNewRole",
             message: "What is the employee's new role?",
-            choices: generateRoleChoices(db),
+            choices: await generateRoleChoices(db),
           },
         ];
 

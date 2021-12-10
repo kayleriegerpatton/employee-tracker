@@ -4,6 +4,7 @@
 //   generateRoleChoices,
 //   generateEmployeesChoices,
 // } = require("./utils/choices");
+const { generateDeptChoices } = require("./utils/choices");
 const { validateInput } = require("./utils/utils");
 
 const startQuestion = [
@@ -112,9 +113,38 @@ const deptQuestion = [
 //   },
 // ];
 
+const getRoleQuestions = async (db) => {
+  return [
+    {
+      type: "input",
+      name: "roleName",
+      message: "What is the name of the role?",
+      validate: validateInput,
+    },
+    {
+      type: "input",
+      name: "salary",
+      message: "What is the role's salary?",
+      validate: (salary) => {
+        return (
+          /^(0|[1-9]\d*)(\.\d+)?$/.test(salary) ||
+          "Please enter a number without commas."
+        );
+      },
+    },
+    {
+      type: "list",
+      name: "roleDept",
+      message: "To which department does the role belong?",
+      choices: await generateDeptChoices(db),
+    },
+  ];
+};
+
 module.exports = {
   startQuestion,
   deptQuestion,
+  getRoleQuestions,
   // roleQuestions,
   // employeeQuestions,
   // employeeRoleQuestions,

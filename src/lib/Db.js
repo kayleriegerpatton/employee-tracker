@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const colors = require("colors");
+
 colors.setTheme({
   success: ["bgGreen", "black"],
   warning: ["bgBrightYellow", "black"],
@@ -13,7 +14,6 @@ class Db {
     this.connection = mysql.createConnection(dbOptions);
   }
 
-  // start database connection
   start() {
     return new Promise((resolve, reject) => {
       const onConnect = (err) => {
@@ -33,15 +33,14 @@ class Db {
     });
   }
 
-  // stop database connection
   stop() {
     this.connection.end();
+
     console.log(
       `\n Disconnected from the ${this.dbOptions.database} database. \n`.success
     );
   }
 
-  // promisified query method
   query(sqlQuery) {
     return new Promise((resolve, reject) => {
       this.connection.query(sqlQuery, (err, result) => {
@@ -56,4 +55,4 @@ class Db {
   }
 }
 
-module.exports = { Db };
+module.exports = Db;

@@ -1,9 +1,7 @@
-const allEmployeesQuery = `SELECT employee.first_name AS "First Name", employee.last_name AS "Last Name", title AS Title, salary as "Salary", name AS Department
-FROM employee
-LEFT JOIN role
-ON employee.role_id =role.id
-LEFT JOIN department
-ON role.department_id=department.id;`;
+const allEmployeesQuery = `SELECT employee_role.first_name AS "First Name", employee_role.last_name AS "Last Name", title AS "Role", salary AS "Salary", name AS "Department", CONCAT (employee_manager.first_name, " ", employee_manager.last_name) as "Manager" FROM employee employee_role
+LEFT JOIN role ON employee_role.role_id = role.id
+LEFT JOIN department ON role.department_id = department.id
+LEFT JOIN employee employee_manager ON employee_role.manager_id = employee_manager.id;`;
 
 // view all roles
 const allRolesQuery = `SELECT role.title AS Role, role.salary AS Salary, department.name AS Department FROM role
