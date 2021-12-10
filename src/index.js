@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const colors = require("colors");
+const art = require("ascii-art");
 
 const Db = require("./lib/Db");
 const { validateInput } = require("./utils/utils");
@@ -27,11 +28,17 @@ colors.setTheme({
 });
 
 const start = async () => {
+  const greetingMessage = await art
+    .font("Employee Tracker", "doom")
+    .completed();
+
+  console.log(greetingMessage);
+
   // create new database instance
   const db = new Db({
     host: process.env.DB_HOST || "localhost",
     user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "Password123!!",
+    password: process.env.DB_PASSWORD || "password",
     database: process.env.DB_NAME || "company_db",
   });
 
