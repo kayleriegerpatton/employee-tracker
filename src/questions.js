@@ -3,6 +3,7 @@ const {
   generateDeptChoices,
   generateRoleChoices,
   generateEmployeesChoices,
+  generateManagersChoices,
 } = require("./utils/choices");
 const { validateInput } = require("./utils/utils");
 
@@ -13,6 +14,7 @@ const startQuestion = [
     message: "What would you like to do?",
     choices: [
       { name: "View all employees", value: "viewEmployees" },
+      { name: "View employees by manager", value: "viewEmployeesByManager" },
       { name: "View all roles", value: "viewRoles" },
       { name: "View all departments", value: "viewDepts" },
       { name: "Add an employee", value: "addEmployee" },
@@ -118,10 +120,22 @@ const getEmployeeRoleQuestions = async (db) => {
   ];
 };
 
+const getEmployeesByManagerQuestion = async (db) => {
+  return [
+    {
+      type: "list",
+      name: "manager",
+      message: "Choose a manager:",
+      choices: await generateManagersChoices(db),
+    },
+  ];
+};
+
 module.exports = {
   startQuestion,
   deptQuestion,
   getRoleQuestions,
   getEmployeeQuestions,
   getEmployeeRoleQuestions,
+  getEmployeesByManagerQuestion,
 };

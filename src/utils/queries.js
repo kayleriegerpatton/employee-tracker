@@ -13,14 +13,21 @@ const allDepartmentsQuery = `SELECT department.name AS Department, department.id
   ORDER BY name;`;
 
 // view employees by manager
-const employeesByManager = `SELECT employee_role.first_name as "First Name", employee_role.last_name as "Last Name", title as "Role", salary as "Salary", name as "Department", CONCAT (employee_manager.first_name, " ", employee_manager.last_name) as "Manager" 
+const EmployeesByManagerQuery = (manager) => {
+  return `SELECT employee_role.first_name as "First Name", employee_role.last_name as "Last Name", title as "Role", salary as "Salary", name as "Department", CONCAT (employee_manager.first_name, " ", employee_manager.last_name) as "Manager"
 FROM employee employee_role
 LEFT JOIN role ON employee_role.role_id = role.id
 LEFT JOIN department ON role.department_id = department.id
-LEFT JOIN employee employee_manager ON employee_role.manager_id = employee_manager.id WHERE employee_role.manager_id = 3;`;
+LEFT JOIN employee employee_manager ON employee_role.manager_id = employee_manager.id WHERE employee_role.manager_id = ${manager};`;
+};
+
+// view managers
+const allManagersQuery = `SELECT first_name, last_name, id FROM employee WHERE manager_id IS NULL; `;
 
 module.exports = {
   allEmployeesQuery,
   allRolesQuery,
   allDepartmentsQuery,
+  EmployeesByManagerQuery,
+  allManagersQuery,
 };

@@ -1,3 +1,5 @@
+const { allManagersQuery } = require("./queries");
+
 // get list of departments for question
 const generateDeptChoices = async (db) => {
   // get departments from DB
@@ -37,8 +39,23 @@ const generateEmployeesChoices = async (db) => {
   });
 };
 
+// get list of managers
+const generateManagersChoices = async (db) => {
+  // get all managers from db
+  const allManagers = await db.query(allManagersQuery);
+
+  // return array of managers
+  return allManagers.map((manager) => {
+    return {
+      name: manager.first_name + " " + manager.last_name,
+      value: manager.id,
+    };
+  });
+};
+
 module.exports = {
   generateDeptChoices,
   generateRoleChoices,
   generateEmployeesChoices,
+  generateManagersChoices,
 };

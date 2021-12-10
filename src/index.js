@@ -11,11 +11,15 @@ const {
   getRoleQuestions,
   getEmployeeQuestions,
   getEmployeeRoleQuestions,
+  getEmployeesByManagerQuestion,
 } = require("./questions");
 const {
   allEmployeesQuery,
   allRolesQuery,
   allDepartmentsQuery,
+  allManagersQuery,
+  getEmployeesByManagerQuery,
+  EmployeesByManagerQuery,
 } = require("./utils/queries");
 
 colors.setTheme({
@@ -60,6 +64,32 @@ const start = async () => {
       } else {
         console.log(
           "\n There are currently no employees in the database. \n".warning
+        );
+      }
+    }
+
+    if (task === "viewEmployeesByManager") {
+      // check that employees exist in db
+      // check if any managers exist in db?
+      const allManagers = await db.query(allManagersQuery);
+
+      if (allManagers.length) {
+        // add manager choices question
+        const managersQuestion = await getEmployeesByManagerQuestion(db);
+
+        // prompt manager choice question
+        const { manager } = await inquirer.prompt(managersQuestion);
+
+        // get employees by manager from db
+        const employeesByManager = await db.query(
+          EmployeesByManagerQuery(manager)
+        );
+
+        console.log("\n MANAGER'S EMPLOYEES \n".message);
+        console.table(employeesByManager);
+      } else {
+        console.log(
+          "\n There are currently no managers in the database. \n".warning
         );
       }
     }
