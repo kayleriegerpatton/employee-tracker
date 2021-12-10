@@ -55,10 +55,11 @@ const start = async () => {
       const allEmployees = await db.query(allEmployeesQuery);
 
       if (allEmployees) {
+        console.log("\n EMPLOYEES \n".message);
         console.table(allEmployees);
       } else {
         console.log(
-          "\n There are curently no employees in the database. \n".warning
+          "\n There are currently no employees in the database. \n".warning
         );
       }
     }
@@ -68,6 +69,7 @@ const start = async () => {
       const allRoles = await db.query(allRolesQuery);
 
       if (allRoles.length) {
+        console.log("\n ROLES \n".message);
         console.table(allRoles);
       } else {
         console.log(
@@ -82,6 +84,7 @@ const start = async () => {
 
       // get depts from db and log table
       if (allDepts.length) {
+        console.log("\n DEPARTMENTS \n".message);
         console.table(allDepts);
       } else {
         console.log(
