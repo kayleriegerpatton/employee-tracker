@@ -1,9 +1,4 @@
 // imports
-// const {
-//   generateDeptChoices,
-//   generateRoleChoices,
-//   generateEmployeesChoices,
-// } = require("./utils/choices");
 const {
   generateDeptChoices,
   generateRoleChoices,
@@ -29,7 +24,7 @@ const startQuestion = [
   },
 ];
 
-// "Add dept" questions
+// "Add new dept" questions
 const deptQuestion = [
   {
     type: "input",
@@ -39,84 +34,7 @@ const deptQuestion = [
   },
 ];
 
-// //   "Add role" questions
-// const roleQuestions = [
-//   {
-//     type: "input",
-//     name: "roleName",
-//     message: "What is the name of the role?",
-//     validate: validateInput,
-//   },
-//   {
-//     type: "input",
-//     name: "salary",
-//     message: "What is the role's salary?",
-//     validate: (salary) => {
-//       return (
-//         /^(0|[1-9]\d*)(\.\d+)?$/.test(salary) ||
-//         "Please enter a number without commas."
-//       );
-//     },
-//   },
-//   {
-//     type: "list",
-//     name: "roleDept",
-//     message: "To which department does the role belong?",
-//     choices: generateDeptChoices,
-//   },
-// ];
-
-// //   "Add employee" questions
-// const employeeQuestions = [
-//   {
-//     type: "input",
-//     name: "firstName",
-//     message: "What is the employee's first name?",
-//     validate: validateInput,
-//   },
-//   {
-//     type: "input",
-//     name: "lastName",
-//     message: "What is the employee's last name?",
-//     validate: validateInput,
-//   },
-//   {
-//     type: "list",
-//     name: "employeeRole",
-//     message: "What is the employee's role?",
-//     choices: generateRoleChoices,
-//   },
-//   {
-//     type: "confirm",
-//     name: "managerConfirm",
-//     message: "Does the employee have a manager?",
-//     default: false,
-//   },
-//   {
-//     type: "list",
-//     name: "employeeManager",
-//     message: "Who is the employee's manager?",
-//     choices: generateEmployeesChoices,
-//     when: (answers) => answers.managerConfirm,
-//   },
-// ];
-
-// //   "Update employee role" questions
-// const employeeRoleQuestions = [
-//   {
-//     type: "list",
-//     name: "employee",
-//     message: "Which employee's role do you want to update?",
-//     choices: generateEmployeesChoices,
-//   },
-//   {
-//     type: "list",
-//     name: "employeeNewRole",
-//     message: "What is the employee's new role?",
-//     choices: generateRoleChoices,
-//   },
-// ];
-
+// "Add new role" questions
 const getRoleQuestions = async (db) => {
   return [
     {
@@ -145,6 +63,7 @@ const getRoleQuestions = async (db) => {
   ];
 };
 
+// "Add new employee" questions
 const getEmployeeQuestions = async (db) => {
   return [
     {
@@ -181,9 +100,28 @@ const getEmployeeQuestions = async (db) => {
   ];
 };
 
+// "Update employee role" questions
+const getEmployeeRoleQuestions = async (db) => {
+  return [
+    {
+      type: "list",
+      name: "employee",
+      message: "Which employee's role do you want to update?",
+      choices: await generateEmployeesChoices(db),
+    },
+    {
+      type: "list",
+      name: "employeeNewRole",
+      message: "What is the employee's new role?",
+      choices: await generateRoleChoices(db),
+    },
+  ];
+};
+
 module.exports = {
   startQuestion,
   deptQuestion,
   getRoleQuestions,
   getEmployeeQuestions,
+  getEmployeeRoleQuestions,
 };

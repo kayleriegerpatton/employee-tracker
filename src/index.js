@@ -4,23 +4,19 @@ const cTable = require("console.table");
 // const art = require("ascii-art");
 
 const Db = require("./lib/Db");
-const { validateInput } = require("./utils/utils");
+
 const {
   startQuestion,
   deptQuestion,
   getRoleQuestions,
   getEmployeeQuestions,
+  getEmployeeRoleQuestions,
 } = require("./questions");
 const {
   allEmployeesQuery,
   allRolesQuery,
   allDepartmentsQuery,
 } = require("./utils/queries");
-const {
-  generateDeptChoices,
-  generateRoleChoices,
-  generateEmployeesChoices,
-} = require("./utils/choices");
 
 colors.setTheme({
   greeting: ["rainbow"],
@@ -168,20 +164,7 @@ const start = async () => {
 
       if (allEmployees.length) {
         //   "Update employee role" questions
-        const employeeRoleQuestions = [
-          {
-            type: "list",
-            name: "employee",
-            message: "Which employee's role do you want to update?",
-            choices: await generateEmployeesChoices(db),
-          },
-          {
-            type: "list",
-            name: "employeeNewRole",
-            message: "What is the employee's new role?",
-            choices: await generateRoleChoices(db),
-          },
-        ];
+        const employeeRoleQuestions = await getEmployeeRoleQuestions(db);
 
         const { employee, employeeNewRole } = await inquirer.prompt(
           employeeRoleQuestions

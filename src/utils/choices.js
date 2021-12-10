@@ -1,3 +1,4 @@
+// get list of departments for question
 const generateDeptChoices = async (db) => {
   // get departments from DB
   const allDepts = await db.query("SELECT * FROM department;");
@@ -10,6 +11,7 @@ const generateDeptChoices = async (db) => {
   });
 };
 
+// get list of roles for question
 const generateRoleChoices = async (db) => {
   // get all roles from db
   const allRoles = await db.query("SELECT * FROM role;");
@@ -22,6 +24,7 @@ const generateRoleChoices = async (db) => {
   });
 };
 
+// get list of employees for question
 const generateEmployeesChoices = async (db) => {
   // get all employees from db
   const allEmployees = await db.query("SELECT * FROM employee;");
