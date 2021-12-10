@@ -21,7 +21,13 @@ const {
   allRolesQuery,
   allDepartmentsQuery,
 } = require("./utils/queries");
-const Db = require("../Db");
+const { Db } = require("../src/db/Db");
+const {
+  generateDeptChoices,
+  generateRoleChoices,
+  generateEmployeesChoices,
+} = require("./utils/choices");
+const { validateInput } = require("./utils/utils");
 
 const start = async () => {
   // create new database instance
@@ -97,6 +103,33 @@ const start = async () => {
       const allDepts = await db.query(allDepartmentsQuery);
 
       if (allDepts.length) {
+        //   "Add role" questions
+        const roleQuestions = [
+          {
+            type: "input",
+            name: "roleName",
+            message: "What is the name of the role?",
+            validate: validateInput,
+          },
+          {
+            type: "input",
+            name: "salary",
+            message: "What is the role's salary?",
+            validate: (salary) => {
+              return (
+                /^(0|[1-9]\d*)(\.\d+)?$/.test(salary) ||
+                "Please enter a number without commas."
+              );
+            },
+          },
+          {
+            type: "list",
+            name: "roleDept",
+            message: "To which department does the role belong?",
+            choices: generateDeptChoices(db),
+          },
+        ];
+
         // get new role answers
         const { roleName, roleDept, salary } = await inquirer.prompt(
           roleQuestions
@@ -117,6 +150,41 @@ const start = async () => {
       const allRoles = await db.query("SELECT * FROM role;");
 
       if (allRoles.length) {
+        //   "Add employee" questions
+        const employeeQuestions = [
+          {
+            type: "input",
+            name: "firstName",
+            message: "What is the employee's first name?",
+            validate: validateInput,
+          },
+          {
+            type: "input",
+            name: "lastName",
+            message: "What is the employee's last name?",
+            validate: validateInput,
+          },
+          {
+            type: "list",
+            name: "employeeRole",
+            message: "What is the employee's role?",
+            choices: generateRoleChoices(db),
+          },
+          {
+            type: "confirm",
+            name: "managerConfirm",
+            message: "Does the employee have a manager?",
+            default: false,
+          },
+          {
+            type: "list",
+            name: "employeeManager",
+            message: "Who is the employee's manager?",
+            choices: generateEmployeesChoices(db),
+            when: (answers) => answers.managerConfirm,
+          },
+        ];
+
         // get new employee answers
         const { firstName, lastName, employeeRole, employeeManager } =
           await inquirer.prompt(employeeQuestions);
@@ -148,6 +216,22 @@ const start = async () => {
       const allEmployees = await db.query("SELECT * FROM employee;");
 
       if (allEmployees.length) {
+        //   "Update employee role" questions
+        const employeeRoleQuestions = [
+          {
+            type: "list",
+            name: "employee",
+            message: "Which employee's role do you want to update?",
+            choices: generateEmployeesChoices(db),
+          },
+          {
+            type: "list",
+            name: "employeeNewRole",
+            message: "What is the employee's new role?",
+            choices: generateRoleChoices(db),
+          },
+        ];
+
         const { employee, employeeNewRole } = await inquirer.prompt(
           employeeRoleQuestions
         );
