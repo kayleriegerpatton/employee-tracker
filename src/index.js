@@ -1,7 +1,6 @@
 const inquirer = require("inquirer");
 const colors = require("colors");
 const cTable = require("console.table");
-// const art = require("ascii-art");
 
 const Db = require("./lib/Db");
 
@@ -26,18 +25,12 @@ const {
 colors.setTheme({
   greeting: ["rainbow"],
   success: ["bgGreen", "black"],
-  warning: ["bgBrightYellow", "black"],
+  warning: ["bgBrightYellow", "black", "bold"],
   fail: ["bgRed", "white", "bold"],
   message: ["bgBrightCyan", "black"],
 });
 
 const start = async () => {
-  // const greetingMessage = await art
-  //   .font("Employee Tracker", "doom")
-  //   .completed();
-
-  // console.log(greetingMessage);
-
   // create new database instance
   const db = new Db({
     host: process.env.DB_HOST || "localhost",
@@ -141,10 +134,14 @@ const start = async () => {
           employeesByDeptQuery(employeeDeptName)
         );
 
-        console.log("\n DEPARTMENT EMPLOYEES \n".message);
-        console.table(employeesByDept);
+        if (employeesByDept.length) {
+          console.log("\n DEPARTMENT EMPLOYEES \n".message);
+          console.table(employeesByDept);
+        } else {
+          console.log("\n No employees in this department. \n".warning);
+        }
       } else {
-        console.log("\n No employees to update. \n".warning);
+        console.log("\n No employees in the database. \n".warning);
       }
     }
 
@@ -242,7 +239,7 @@ const start = async () => {
     // QUIT
     if (task === "quit") {
       inProgress = false;
-      console.log("\n Application ended. \n".message);
+      console.log("\n Application ended. \n".greeting);
       await db.stop();
       process.exit(0);
     }

@@ -1,4 +1,13 @@
 const mysql = require("mysql2");
+const colors = require("colors");
+
+colors.setTheme({
+  greeting: ["rainbow", "bold"],
+  success: ["bgGreen", "black"],
+  warning: ["bgBrightYellow", "black", "bold"],
+  fail: ["bgRed", "white", "bold"],
+  message: ["bgBrightCyan", "black"],
+});
 
 const { departments, employees, roles } = require("./data");
 
@@ -13,16 +22,15 @@ const dbOptions = {
 // connect to database
 const db = mysql.createConnection(dbOptions);
 
-// seed data to database
-// add departments
+// seed departments
 const insertDept = (dept) => {
   db.query(`INSERT INTO department (name) VALUE ('${dept}')`);
 };
 
 departments.forEach(insertDept);
-console.log("Added departments.");
+console.log("Added departments.".success);
 
-// add roles
+// seed roles
 const insertRole = ({ title, salary, departmentId }) => {
   db.query(
     `INSERT INTO role (title, salary, department_id) VALUE ('${title}', ${salary}, ${departmentId})`
@@ -30,9 +38,9 @@ const insertRole = ({ title, salary, departmentId }) => {
 };
 
 roles.forEach(insertRole);
-console.log("Added roles.");
+console.log("Added roles.".success);
 
-// add employees
+// seed employees
 const insertEmployee = ({ firstName, lastName, roleId, managerId }) => {
   managerId
     ? db.query(
@@ -44,6 +52,6 @@ const insertEmployee = ({ firstName, lastName, roleId, managerId }) => {
 };
 
 employees.forEach(insertEmployee);
-console.log("Added employees.");
+console.log("Added employees.".success);
 
 db.end();

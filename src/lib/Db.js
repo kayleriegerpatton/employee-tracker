@@ -23,7 +23,7 @@ class Db {
         }
 
         console.log(
-          `\n Connected to the ${this.dbOptions.database} database. \n`.success
+          `\n Connected to the ${this.dbOptions.database} database. \n`.greeting
         );
 
         resolve();
