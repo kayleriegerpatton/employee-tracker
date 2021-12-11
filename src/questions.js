@@ -19,10 +19,11 @@ const startQuestion = [
       { name: "View all roles", value: "viewRoles" },
       { name: "View all departments", value: "viewDepts" },
       {
-        name: "View all employees by department",
+        name: "View employees by department",
         value: "viewEmployeesByDept",
       },
       { name: "Add an employee", value: "addEmployee" },
+      { name: "Delete an employee", value: "deleteEmployee" },
       { name: "Add a new role", value: "addRole" },
       { name: "Add a new department", value: "addDept" },
       { name: "Update an employee's role", value: "updateEmployeeRole" },
@@ -147,6 +148,17 @@ const getEmployeesByDeptQuestion = async (db) => {
   ];
 };
 
+const getEmployeesChoicesQuestion = async (db) => {
+  return [
+    {
+      type: "list",
+      name: "deletedEmployee",
+      message: "Choose an employee to delete:",
+      choices: await generateEmployeesChoices(db),
+    },
+  ];
+};
+
 module.exports = {
   startQuestion,
   deptQuestion,
@@ -155,4 +167,5 @@ module.exports = {
   getEmployeeRoleQuestions,
   getEmployeesByManagerQuestion,
   getEmployeesByDeptQuestion,
+  getEmployeesChoicesQuestion,
 };

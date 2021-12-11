@@ -32,6 +32,10 @@ const employeesByDeptQuery = (employeeDeptName) => {
   LEFT JOIN employee employee_manager ON employee_role.manager_id = employee_manager.id WHERE role.department_id = ${employeeDeptName};`;
 };
 
+const deleteEmployeeQuery = (deletedEmployee) => {
+  return `DELETE FROM employee WHERE id = ${deletedEmployee};`;
+};
+
 module.exports = {
   allEmployeesQuery,
   allRolesQuery,
@@ -39,4 +43,5 @@ module.exports = {
   employeesByManagerQuery,
   allManagersQuery,
   employeesByDeptQuery,
+  deleteEmployeeQuery,
 };

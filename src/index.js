@@ -12,6 +12,7 @@ const {
   getEmployeeRoleQuestions,
   getEmployeesByManagerQuestion,
   getEmployeesByDeptQuestion,
+  getEmployeesChoicesQuestion,
 } = require("./questions");
 const {
   allEmployeesQuery,
@@ -20,6 +21,7 @@ const {
   allManagersQuery,
   employeesByManagerQuery,
   employeesByDeptQuery,
+  deleteEmployeeQuery,
 } = require("./utils/queries");
 
 colors.setTheme({
@@ -233,6 +235,31 @@ const start = async () => {
         console.log(`\n Role updated. \n`.success);
       } else {
         console.log("\n No employees to update. \n".warning);
+      }
+    }
+
+    // DELETE options
+    if (task === "deleteEmployee") {
+      // check if any employees exist in db
+      const allEmployees = await db.query(allEmployeesQuery);
+
+      if (allEmployees) {
+        // create employees choices question
+        const deleteEmployeeQuestion = await getEmployeesChoicesQuestion(db);
+
+        // prompt delete employee list question
+        const { deletedEmployee } = await inquirer.prompt(
+          deleteEmployeeQuestion
+        );
+
+        // delete chosen employee from db
+        await db.query(deleteEmployeeQuery(deletedEmployee));
+
+        console.log("\n Employee deleted. \n".message);
+      } else {
+        console.log(
+          "\n There are currently no employees in the database. \n".warning
+        );
       }
     }
 
