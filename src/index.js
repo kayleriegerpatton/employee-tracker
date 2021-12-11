@@ -12,14 +12,15 @@ const {
   getEmployeeQuestions,
   getEmployeeRoleQuestions,
   getEmployeesByManagerQuestion,
+  getEmployeesByDeptQuestion,
 } = require("./questions");
 const {
   allEmployeesQuery,
   allRolesQuery,
   allDepartmentsQuery,
   allManagersQuery,
-  getEmployeesByManagerQuery,
-  EmployeesByManagerQuery,
+  employeesByManagerQuery,
+  employeesByDeptQuery,
 } = require("./utils/queries");
 
 colors.setTheme({
@@ -69,8 +70,7 @@ const start = async () => {
     }
 
     if (task === "viewEmployeesByManager") {
-      // check that employees exist in db
-      // check if any managers exist in db?
+      // check if any managers exist in db
       const allManagers = await db.query(allManagersQuery);
 
       if (allManagers.length) {
@@ -82,7 +82,7 @@ const start = async () => {
 
         // get employees by manager from db
         const employeesByManager = await db.query(
-          EmployeesByManagerQuery(manager)
+          employeesByManagerQuery(manager)
         );
 
         console.log("\n MANAGER'S EMPLOYEES \n".message);
@@ -120,6 +120,31 @@ const start = async () => {
         console.log(
           "\n There are currently no departments in the database. \n".warning
         );
+      }
+    }
+
+    if (task === "viewEmployeesByDept") {
+      // check if employees exist in db
+      const allEmployees = await db.query("SELECT * FROM employee;");
+
+      if (allEmployees.length) {
+        // add dept choice question
+        const employeesByDeptQuestion = await getEmployeesByDeptQuestion(db);
+
+        // prompt dept choice question
+        const { employeeDeptName } = await inquirer.prompt(
+          employeesByDeptQuestion
+        );
+
+        // use deptName to run db query
+        const employeesByDept = await db.query(
+          employeesByDeptQuery(employeeDeptName)
+        );
+
+        console.log("\n DEPARTMENT EMPLOYEES \n".message);
+        console.table(employeesByDept);
+      } else {
+        console.log("\n No employees to update. \n".warning);
       }
     }
 
