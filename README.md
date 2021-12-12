@@ -7,6 +7,7 @@
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Installation](#installation)
+  - [Seeding](#seeding)
   - [Usage](#usage)
 - [Questions & Contributing](#questions-and-contributing)
 - [License](#license)
@@ -40,8 +41,16 @@ Run the following script to install the application:
 
 ```
 git clone https://github.com/kayleriegerpatton/employee-tracker.git
-cd readme-generator
+cd employee-tracker
 npm install
+```
+
+### Seeding
+
+Before starting the application, seed data with the following script:
+
+```
+npm run seed
 ```
 
 ### Usage
