@@ -1,11 +1,10 @@
-// imports
+// internal imports
 const {
   generateDeptChoices,
   generateRoleChoices,
   generateEmployeesChoices,
   generateManagersChoices,
 } = require("./utils/choices");
-const { employeesByDeptQuery } = require("./utils/queries");
 const { validateInput } = require("./utils/utils");
 
 const startQuestion = [
@@ -126,6 +125,7 @@ const getEmployeeRoleQuestions = async (db) => {
   ];
 };
 
+// 'view employees by manager' questions
 const getEmployeesByManagerQuestion = async (db) => {
   return [
     {
@@ -137,6 +137,7 @@ const getEmployeesByManagerQuestion = async (db) => {
   ];
 };
 
+// 'view employees by dept' questions
 const getEmployeesByDeptQuestion = async (db) => {
   return [
     {
@@ -148,6 +149,7 @@ const getEmployeesByDeptQuestion = async (db) => {
   ];
 };
 
+// 'delete an employee' question
 const getEmployeesChoicesQuestion = async (db) => {
   return [
     {

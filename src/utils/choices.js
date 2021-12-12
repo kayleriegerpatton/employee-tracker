@@ -1,3 +1,4 @@
+// internal imports
 const { allManagersQuery } = require("./queries");
 
 // get list of departments for question

@@ -1,14 +1,16 @@
+// external imports
 const mysql = require("mysql2");
 const colors = require("colors");
 
 colors.setTheme({
-  greeting: ["rainbow", "bold"],
+  greeting: ["rainbow"],
   success: ["bgGreen", "black"],
   warning: ["bgBrightYellow", "black", "bold"],
   fail: ["bgRed", "white", "bold"],
   message: ["bgBrightCyan", "black"],
 });
 
+// internal imports
 const { departments, employees, roles } = require("./data");
 
 // database config

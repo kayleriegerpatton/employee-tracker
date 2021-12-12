@@ -1,3 +1,4 @@
+// external imports
 const colors = require("colors");
 colors.setTheme({
   success: ["bgGreen", "black"],
@@ -6,7 +7,7 @@ colors.setTheme({
   message: ["bgBrightCyan", "black"],
 });
 
-// question validation
+// validate not null entry
 const validateInput = (input) => {
   if (!input) {
     return "Field is required.".warning;

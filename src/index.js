@@ -1,7 +1,9 @@
+// external imports
 const inquirer = require("inquirer");
 const colors = require("colors");
 const cTable = require("console.table");
 
+// internal imports
 const Db = require("./lib/Db");
 
 const {
@@ -47,6 +49,7 @@ const start = async () => {
   let inProgress = true;
 
   while (inProgress) {
+    // prompt initial question
     const { task } = await inquirer.prompt(startQuestion);
 
     // VIEW options
@@ -210,7 +213,7 @@ const start = async () => {
           `\n ${firstName} ${lastName} added to the database. \n`.success
         );
       } else {
-        console.log("\n Please create a new role first. \n".warning);
+        console.log("\n Please create a role first. \n".warning);
       }
     }
 
@@ -266,8 +269,11 @@ const start = async () => {
     // QUIT
     if (task === "quit") {
       inProgress = false;
-      console.log("\n Application ended. \n".greeting);
+
       await db.stop();
+
+      console.log("\n Application ended. \n".greeting);
+
       process.exit(0);
     }
   }

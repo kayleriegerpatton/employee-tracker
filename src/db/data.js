@@ -1,5 +1,7 @@
+// department seed data
 const departments = ["Education", "Exhibitions", "Curatorial"];
 
+// roles seed data
 const roles = [
   {
     title: "Director of Education",
@@ -33,6 +35,7 @@ const roles = [
   },
 ];
 
+// employees seed data
 const employees = [
   {
     firstName: "Scott",
