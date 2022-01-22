@@ -1,0 +1,27 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "seed": "node src/db/seed.js",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kayleriegerpatton/employee-tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kayleriegerpatton/employee-tracker/issues"
+  },
+  "homepage": "https://github.com/kayleriegerpatton/employee-tracker#readme",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "console.table": "^0.10.0",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3"
+  }
+}
