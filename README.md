@@ -72,3 +72,5 @@ MIT License
 ## Demo Video
 
 Click to view a [demo video](https://drive.google.com/file/d/1THvSjwFQofLuyvx8UxQTTphZCWSIKkEC/view?usp=sharing).
+
+![command line prompts and responses animation](assets/gifs/EmployeeManagementGIF.gif)
